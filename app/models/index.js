@@ -21,5 +21,7 @@ db.meta = require('./meta.model');
 db['meta-attribute'] = require("./meta-attribute.model");
 db.file = require('./file.model');
 db.order = require('./order.model');
+db.setting = require('./setting.model');
+db.report = require('./report.model');
 
 module.exports = db;

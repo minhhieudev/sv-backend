@@ -32,9 +32,6 @@ app.use('/products', require('./product.routes'));
 // Comments
 app.use('/comments', require('./comment.routes'));
 
-// Address
-app.use('/address', require('./address.routes'));
-
 // Catalogs
 app.use('/catalogs', require('./catalog.routes'))
 
@@ -49,5 +46,9 @@ app.use('/order', require('./order.routes'))
 
 // helper 
 app.use('/helper', require('./helper.routes'))
+
+app.use('/setting', require('./setting.routes'))
+
+app.use('/report', require('./report.routes'))
 
 module.exports = app;
