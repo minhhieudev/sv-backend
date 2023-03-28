@@ -11,7 +11,7 @@ var corsOptions = {
 
 const methods = require('./app/helpers/methods')
 global.getCollection = methods.getCollection
-
+global.globalConfig = {}
 const db = require("./app/models");
 global.db = db
 global.APP_DIR = __dirname
@@ -53,10 +53,18 @@ app.use('*', (req, res) => {
 const PORT = process.env.PORT || 8000;
 app.use(logger('dev'));
 
+async function init() {
+    let settings = await db.setting.find()
+    settings.forEach(setting => {
+        globalConfig[setting.key] = setting.data
+    });
+}
+
 app.listen(PORT, async () => {
-    let adminDefaultUser = await db.admin.findOne({ email: 'test@gmail.com' })
+    init()
+    let adminDefaultUser = await db.user.findOne({ email: 'test@gmail.com' })
     if (!adminDefaultUser) {
-        db.admin.create({ fullname: 'test', role: 'admin', email: 'test@gmail.com', password: bcrypt.hashSync('123456789', 8) })
+        db.user.create({ fullname: 'test', role: 'admin', email: 'test@gmail.com', password: bcrypt.hashSync('123456789', 8) })
     }
     console.log(`Server is running on port ${PORT}.`);
 });
