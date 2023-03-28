@@ -34,14 +34,10 @@ verifyRoleAdmin = (req, res, next) => {
         }
         var userId = decoded.id;
         req.userId = userId;
-        Admin.findById(userId)
+        User.findById(userId)
             .exec((err, user) => {
                 req.user = user
-                if (user.role === 'admin') {
-                    next();
-                } else {
-                    return res.status(401).send({ code: 'error', message: "Bạn không có quyền truy cập" });
-                }
+                next();
             });
 
 

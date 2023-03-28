@@ -48,7 +48,7 @@ exports.signup = async(req, res) => {
 };
 
 exports.signin = (req, res) => {
-    Admin.findOne({
+    db.user.findOne({
             email: req.body.email
         })
         .exec((err, admin) => {
@@ -57,7 +57,7 @@ exports.signin = (req, res) => {
                 return;
             }
             if (!admin) {
-                return res.status(401).json({ code: 'error', msg: "Tài khoản hoặc mật khẩu không đúng" });
+                return res.status(401).json({ code: 'error', msg: "Không tìm thấy tài khoản." });
             }
 
             var passwordIsValid = bcrypt.compareSync(
@@ -82,6 +82,7 @@ exports.signin = (req, res) => {
                     fullname: admin.fullname,
                     email: admin.email,
                     accessToken: token,
+                    role: admin.role,
                 }
             });
         });
