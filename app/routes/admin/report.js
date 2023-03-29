@@ -10,7 +10,7 @@ function invalidIP (req) {
 router.post('/checkin', $(async function (req, res) {
   console.log('globalConfig', globalConfig);
   if (invalidIP(req)) {
-    return res.json({ success: true, code: 'error', msg: 'Vui lòng dùng đúng mạng của cty để check in.' })
+    return res.json({ success: true, status: 'error', message: 'Vui lòng dùng đúng mạng của cty để check in.' })
   }
 
   db.report.create({
@@ -18,12 +18,12 @@ router.post('/checkin', $(async function (req, res) {
     time: req.body.time || Date.now(),
     type: db.report.REPORT_TYPE.CHECKIN
   })
-  res.json({ success: true, code: 'success', msg: 'Hoàn tất.' })
+  res.json({ success: true, status: 'success', message: 'Hoàn tất.' })
 }))
 
 router.post('/checkout', $(async function (req, res) {
   if (invalidIP(req)) {
-    return res.json({ success: true, code: 'error', msg: 'Vui lòng dùng đúng mạng của cty để check in.' })
+    return res.json({ success: true, status: 'error', message: 'Vui lòng dùng đúng mạng của cty để check in.' })
   }
 
   db.report.create({
@@ -31,7 +31,7 @@ router.post('/checkout', $(async function (req, res) {
     time: req.body.time || Date.now(),
     type: db.report.REPORT_TYPE.CHECKOUT
   })
-  res.json({ success: true, code: 'success', msg: 'Hoàn tất.' })
+  res.json({ success: true, status: 'success', message: 'Hoàn tất.' })
 }))
 
 router.post('/collection', $(async function (req, res) {

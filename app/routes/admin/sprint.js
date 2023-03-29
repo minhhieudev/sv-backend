@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const $ = require('../../middlewares/safe-call')
-const UserModel = db.user;
+const TaskModel = db.task;
 
 app.post("/collection", $(async (req, res) => {
   const rs = await getCollection('user', req.body)
@@ -10,7 +10,7 @@ app.post("/collection", $(async (req, res) => {
 
 app.get("/", $(async (req, res) => {
   let filter = {}
-  const docs = await UserModel.find(filter).catch(error => {
+  const docs = await TaskModel.find(filter).catch(error => {
     console.error('Error: ', error);
     return []
   })
@@ -20,7 +20,7 @@ app.get("/", $(async (req, res) => {
 app.get("/:id", $(async (req, res) => {
   const id = req.params.id
   if (id) {
-    const doc = await UserModel.findOne({ _id: id }).catch(error => {
+    const doc = await TaskModel.findOne({ _id: id }).catch(error => {
       console.error('Error: ', error);
       return null
     })
@@ -40,7 +40,7 @@ app.post("/", $(async (req, res) => {
     if (data._id) {
       // update
       // TODO - validate
-      const updatedDoc = await UserModel.updateOne({ _id: data._id }, data).catch(error => {
+      const updatedDoc = await TaskModel.updateOne({ _id: data._id }, data).catch(error => {
         console.error('Error:', error);
         return null
       })
@@ -53,7 +53,7 @@ app.post("/", $(async (req, res) => {
     } else {
       // create new
       // TODO - validate
-      const createdDoc = await UserModel.create(data).catch(error => {
+      const createdDoc = await TaskModel.create(data).catch(error => {
         console.error('Error:', error);
         return null
       })
@@ -71,17 +71,17 @@ app.post("/", $(async (req, res) => {
 app.delete("/:id", $(async (req, res) => {
   const id = req.params.id
   if (id) {
-    const result = await UserModel.deleteOne({ _id: id }).catch(error => {
+    const doc = await TaskModel.deleteOne({ _id: id }).catch(error => {
       console.error('Error: ', error);
       return null
     })
-console.log(result);
-    if (result && result.deletedCount) {
-      return res.json({ success: true, status: 'success', message: 'Xóa hoàn tất.' })
+
+    if (doc) {
+      return res.json({ success: true, doc })
     }
   }
 
-  return res.json({ success: false })
+  return res.json({ success: false, doc: null })
 }))
 
 module.exports = app;

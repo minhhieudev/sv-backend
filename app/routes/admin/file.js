@@ -71,16 +71,16 @@ app.delete("/:id", async (req, res) => {
               }
 
               await file.remove()
-              return res.status(200).json({ code: 'success', msg: 'Xóa thành công' });
+              return res.status(200).json({ status: 'success', message: 'Xóa thành công' });
           } catch (error) {
-              return res.status(500).json({ code: 'error', msg: error.message });
+              return res.status(500).json({ status: 'error', message: error.message });
           }
       }
      
       
-      res.status(400).json({ code: 'error', msg: 'Không tìm thấy' });
+      res.status(400).json({ status: 'error', message: 'Không tìm thấy' });
   } catch (error) {
-      res.status(500).json({ code: 'error', msg: error.message });
+      res.status(500).json({ status: 'error', message: error.message });
   }
 });
 

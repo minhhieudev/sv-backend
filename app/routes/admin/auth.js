@@ -9,11 +9,11 @@ app.post("/signin", async (req, res) => {
   })
     .exec((err, admin) => {
       if (err) {
-        res.status(500).json({ code: 'error', msg: err });
+        res.status(500).json({ status: 'error', message: err });
         return;
       }
       if (!admin) {
-        return res.status(401).json({ code: 'error', msg: "Không tìm thấy tài khoản." });
+        return res.status(401).json({ status: 'error', message: "Không tìm thấy tài khoản." });
       }
 
       const passwordIsValid = bcrypt.compareSync(
@@ -23,8 +23,8 @@ app.post("/signin", async (req, res) => {
 
       if (!passwordIsValid) {
         return res.status(401).json({
-          code: 'error',
-          msg: "Tài khoản hoặc mật khẩu không đúng"
+          status: 'error',
+          message: "Tài khoản hoặc mật khẩu không đúng"
         });
       }
 
@@ -32,8 +32,10 @@ app.post("/signin", async (req, res) => {
         expiresIn: 86400 // 24 hours
       });
       res.status(200).json({
-        code: 'success',
-        data: {
+        success: true,
+        status: 'success',
+        message: 'Đăng nhập thành công',
+        user: {
           _id: admin._id,
           fullname: admin.fullname,
           email: admin.email,

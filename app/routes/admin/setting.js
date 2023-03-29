@@ -16,7 +16,7 @@ router.put('/', $(async function (req, res) {
     await db.setting.findOneAndUpdate({ key }, { data: settings[key] }, {upsert: true});
   }
 
-  res.status(200).json({ code: 'success', msg: 'Cập nhật thành công' });
+  res.status(200).json({ status: 'success', message: 'Cập nhật thành công' });
 }))
 
 module.exports = express.Router().use(router)

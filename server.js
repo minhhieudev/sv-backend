@@ -61,7 +61,6 @@ async function init() {
 
     // load global var
     _APP_SECRET = process.env.SECRET || 'secret'
-    console.log('_APP_SECRET', _APP_SECRET);
 }
 
 app.listen(PORT, async () => {

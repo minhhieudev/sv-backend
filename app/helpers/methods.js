@@ -76,14 +76,14 @@ module.exports = {
 
     return Promise.all([getTotalCount(), getList()]).then(([count, list]) => {
       return {
-        code: 'success',
+        success: true,
         total: count,
-        data: list,
+        docs: list,
       }
     }).catch((err) => {
       return {
-        code: 'error', 
-        msg: err
+        success: false, 
+        message: err
       }
     })
   }

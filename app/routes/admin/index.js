@@ -18,5 +18,8 @@ app.use('/users', require('./user'));
 app.use('/helper', require('./helper'))
 app.use('/setting', require('./setting'))
 app.use('/report', require('./report'))
+app.use('/task', require('./task'))
+app.use('/sprint', require('./sprint'))
+app.use('/epic', require('./epic'))
 
 module.exports = app;
