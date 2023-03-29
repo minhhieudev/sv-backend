@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require('mongoose')
 const bodyParser = require("body-parser");
 const bcrypt = require("bcryptjs");
 const cors = require("cors");
@@ -8,8 +9,9 @@ var corsOptions = {
     origin: '*',
     optionsSuccessStatus: 200
 };
-
+require('dotenv').config()
 const methods = require('./app/helpers/methods')
+global._APP_SECRET = ''
 global.getCollection = methods.getCollection
 global.globalConfig = {}
 const db = require("./app/models");
@@ -20,31 +22,24 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// connect to mongo
 let monoPath = `mongodb+srv://kimtrongdev2:HUYyfu1ovSqkxJde@cluster0.vawtbzy.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`
 if (process.env.MONGO_URL) {
     monoPath = `mongodb://${process.env.MONGO_URL || 'localhost:27017'}/${process.env.MONGO_NAME || 'wl-test'}`
 }
-db.mongoose
-    .connect(monoPath, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    })
-    .then(() => {
-        console.log("Đã kết nối tới Mongodb.");
-    })
-    .catch(err => {
-        console.error("Connection error", err);
-        process.exit();
-    });
+mongoose.connect(monoPath, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => {
+    console.log("Đã kết nối tới Mongodb.");
+}).catch(err => {
+    console.error("Connection error", err);
+    process.exit();
+});
 
 // routes
-
-
 app.use("/upload", express.static('public'));
-
-app.use('/api/frontend', require('./app/api/frontend'));
-app.use('/api/v1/public', require('./app/routes/public'));
-app.use('/api/v1/private', require('./app/routes/private'));
+app.use('/api/v1/admin', require('./app/routes/admin'));
 app.use('*', (req, res) => {
     res.json({ status: 'error', msg: 'Not Route, call admin' });
 });
@@ -58,13 +53,18 @@ async function init() {
     settings.forEach(setting => {
         globalConfig[setting.key] = setting.data
     });
-}
 
-app.listen(PORT, async () => {
-    init()
     let adminDefaultUser = await db.user.findOne({ email: 'test@gmail.com' })
     if (!adminDefaultUser) {
         db.user.create({ fullname: 'test', role: 'admin', email: 'test@gmail.com', password: bcrypt.hashSync('123456789', 8) })
     }
+
+    // load global var
+    _APP_SECRET = process.env.SECRET || 'secret'
+    console.log('_APP_SECRET', _APP_SECRET);
+}
+
+app.listen(PORT, async () => {
+    init()
     console.log(`Server is running on port ${PORT}.`);
 });

@@ -54,11 +54,16 @@ module.exports = {
 
     function getList() {
       return new Promise((resolve, reject) => {
-        Model.find(filter)
+        const qr = Model.find(filter)
           .skip((page - 1) * limit)
           .sort(sort)
           .limit(limit)
-          .exec()
+
+        if (bodyData.populate) {
+          qr.populate(bodyData.populate)
+        }
+
+        qr.exec()
           .then((docs) => {
             resolve(docs)
           })

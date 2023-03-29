@@ -1,9 +1,6 @@
 const jwt = require("jsonwebtoken");
-const config = require("../config/auth.config.js");
 const db = require("../models");
 const User = db.user;
-const Role = db.role;
-const Admin = db.admin;
 
 verifyToken = (req, res, next) => {
     let token = req.headers["x-access-token"];
@@ -12,7 +9,7 @@ verifyToken = (req, res, next) => {
         return res.status(403).send({ code: 'error', message: "Bạn không có quyền truy cập" });
     }
 
-    jwt.verify(token, config.secret, (err, decoded) => {
+    jwt.verify(token, _APP_SECRET, (err, decoded) => {
         if (err) {
             return res.status(401).send({ code: 'error', message: "Bạn không có quyền truy cập" });
         }
@@ -28,7 +25,7 @@ verifyRoleAdmin = (req, res, next) => {
         return res.status(403).send({ code: 'error', message: "Bạn không có quyền truy cập" });
     }
 
-    jwt.verify(token, config.secret, (err, decoded) => {
+    jwt.verify(token, _APP_SECRET, (err, decoded) => {
         if (err) {
             return res.status(401).send({ code: 'error', message: "Bạn không có quyền truy cập" });
         }
