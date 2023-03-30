@@ -28,7 +28,7 @@ app.post("/signin", async (req, res) => {
         });
       }
 
-      const token = jwt.sign({ id: admin.id }, process.env.SECRET || 'SECRET', {
+      const token = jwt.sign({ id: admin.id }, _APP_SECRET, {
         expiresIn: 86400 // 24 hours
       });
       res.status(200).json({
