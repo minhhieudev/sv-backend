@@ -71,17 +71,17 @@ app.post("/", $(async (req, res) => {
 app.delete("/:id", $(async (req, res) => {
   const id = req.params.id
   if (id) {
-    const doc = await TaskModel.deleteOne({ _id: id }).catch(error => {
+    const result = await TaskModel.deleteOne({ _id: id }).catch(error => {
       console.error('Error: ', error);
       return null
     })
 
-    if (doc) {
-      return res.json({ success: true, doc })
+    if (result && result.deletedCount) {
+      return res.json({ success: true, status: 'success', message: 'Xóa hoàn tất.' })
     }
   }
 
-  return res.json({ success: false, doc: null })
+  return res.json({ success: false })
 }))
 
 module.exports = app;

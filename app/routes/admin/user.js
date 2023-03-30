@@ -75,7 +75,7 @@ app.delete("/:id", $(async (req, res) => {
       console.error('Error: ', error);
       return null
     })
-console.log(result);
+
     if (result && result.deletedCount) {
       return res.json({ success: true, status: 'success', message: 'Xóa hoàn tất.' })
     }
