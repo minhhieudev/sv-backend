@@ -3,6 +3,13 @@ const app = express();
 const $ = require('../../middlewares/safe-call')
 const TaskModel = db.task;
 
+// custom routes
+app.get("/status-list", $(async (req, res) => {
+  const doc = TaskModel.STATUS_LABEL
+  return res.json({ success: true, doc })
+}))
+
+// CRUD routes
 app.post("/collection", $(async (req, res) => {
   const rs = await getCollection('user', req.body)
   res.json(rs)
