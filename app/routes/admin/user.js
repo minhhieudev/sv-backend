@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const $ = require('../../middlewares/safe-call')
 const UserModel = db.user;
+const bcrypt = require("bcryptjs");
 
 app.post("/collection", $(async (req, res) => {
   const rs = await getCollection('user', req.body)
@@ -53,6 +54,7 @@ app.post("/", $(async (req, res) => {
     } else {
       // create new
       // TODO - validate
+      data.password = bcrypt.hashSync(data.password, 8)
       const createdDoc = await UserModel.create(data).catch(error => {
         console.error('Error:', error);
         return null

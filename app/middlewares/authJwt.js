@@ -27,7 +27,7 @@ verifyRoleAdmin = (req, res, next) => {
 
     jwt.verify(token, _APP_SECRET, (err, decoded) => {
         if (err) {
-            return res.status(401).send({ code: 'error', message: "Bạn không có quyền truy cập" });
+            return res.status(401).send({ code: 'error', message: "Bạn không có quyền truy cập." });
         }
         var userId = decoded.id;
         req.userId = userId;
@@ -36,8 +36,6 @@ verifyRoleAdmin = (req, res, next) => {
                 req.user = user
                 next();
             });
-
-
     });
 };
 

@@ -11,7 +11,7 @@ var corsOptions = {
 };
 require('dotenv').config()
 const methods = require('./app/helpers/methods')
-global._APP_SECRET = ''
+global._APP_SECRET = process.env.SECRET || 'secret'
 global.getCollection = methods.getCollection
 global.globalConfig = {}
 const db = require("./app/models");
@@ -54,13 +54,10 @@ async function init() {
         globalConfig[setting.key] = setting.data
     });
 
-    let adminDefaultUser = await db.user.findOne({ email: 'test@gmail.com' })
+    let adminDefaultUser = await db.user.findOne({ email: 'admin@gmail.com' })
     if (!adminDefaultUser) {
-        db.user.create({ fullname: 'test', role: 'admin', email: 'test@gmail.com', password: bcrypt.hashSync('123456789', 8) })
+        db.user.create({ fullname: 'Admin', role: 'admin', email: 'admin@gmail.com', password: bcrypt.hashSync('123123qq@', 8) })
     }
-
-    // load global var
-    _APP_SECRET = process.env.SECRET || 'secret'
 }
 
 app.listen(PORT, async () => {
