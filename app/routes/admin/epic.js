@@ -1,10 +1,12 @@
 const express = require('express');
 const app = express();
 const $ = require('../../middlewares/safe-call')
-const EpicModel = db.epic;
+const modelName = 'epic'
+const EpicModel = db[modelName];
 
 app.post("/collection", $(async (req, res) => {
-  const rs = await getCollection('user', req.body)
+  req.body.populate = { path: 'user', select: 'fullname' }
+  const rs = await getCollection(modelName, req.body)
   res.json(rs)
 }))
 
@@ -53,6 +55,7 @@ app.post("/", $(async (req, res) => {
     } else {
       // create new
       // TODO - validate
+      data.user = req.user._id
       const createdDoc = await EpicModel.create(data).catch(error => {
         console.error('Error:', error);
         return null

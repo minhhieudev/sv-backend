@@ -21,5 +21,7 @@ app.use('/report', require('./report'))
 app.use('/task', require('./task'))
 app.use('/sprint', require('./sprint'))
 app.use('/epic', require('./epic'))
+app.use('/comment', require('./comment'))
+app.use('/task-report', require('./task-report'))
 
 module.exports = app;

@@ -1,18 +1,17 @@
 const express = require('express');
 const app = express();
 const $ = require('../../middlewares/safe-call')
-const modelName = 'sprint'
-const SprintModel = db[modelName];
+const modelName = 'taskreport'
+const CommentModel = db[modelName];
 
 app.post("/collection", $(async (req, res) => {
-  req.body.populate = { path: 'user', select: 'fullname' }
   const rs = await getCollection(modelName, req.body)
   res.json(rs)
 }))
 
 app.get("/", $(async (req, res) => {
   let filter = {}
-  const docs = await SprintModel.find(filter).catch(error => {
+  const docs = await CommentModel.find(filter).catch(error => {
     console.error('Error: ', error);
     return []
   })
@@ -22,7 +21,7 @@ app.get("/", $(async (req, res) => {
 app.get("/:id", $(async (req, res) => {
   const id = req.params.id
   if (id) {
-    const doc = await SprintModel.findOne({ _id: id }).catch(error => {
+    const doc = await CommentModel.findOne({ _id: id }).catch(error => {
       console.error('Error: ', error);
       return null
     })
@@ -42,7 +41,7 @@ app.post("/", $(async (req, res) => {
     if (data._id) {
       // update
       // TODO - validate
-      const updatedDoc = await SprintModel.updateOne({ _id: data._id }, data).catch(error => {
+      const updatedDoc = await CommentModel.updateOne({ _id: data._id }, data).catch(error => {
         console.error('Error:', error);
         return null
       })
@@ -56,12 +55,13 @@ app.post("/", $(async (req, res) => {
       // create new
       // TODO - validate
       data.user = req.user._id
-      const createdDoc = await SprintModel.create(data).catch(error => {
+      const createdDoc = await CommentModel.create(data).catch(error => {
         console.error('Error:', error);
         return null
       })
 
       if (createdDoc) {
+        await createdDoc.populate('user', 'fullname avatar')
         return res.json({ success: true, doc: createdDoc, status: 'success', message: 'Tạo mới thành công.' })
       } else {
         return res.json({ success: false, status: 'error', message: 'Tạo mới thất bại.' })
@@ -74,7 +74,7 @@ app.post("/", $(async (req, res) => {
 app.delete("/:id", $(async (req, res) => {
   const id = req.params.id
   if (id) {
-    const result = await SprintModel.deleteOne({ _id: id }).catch(error => {
+    const result = await CommentModel.deleteOne({ _id: id }).catch(error => {
       console.error('Error: ', error);
       return null
     })

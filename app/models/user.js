@@ -12,9 +12,8 @@ const schema = new mongoose.Schema({
         city: { type: String, default: null },
     },
     role: { type: String, default: 'user' },
-    verified: { type: Boolean, default: false },
     status: { type: Boolean, default: true },
-    created: { type: Date, default: Date.now },
+    avatar: { type: String },
 })
 
 schema.set('timestamps', true);

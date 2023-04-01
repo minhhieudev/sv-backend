@@ -7,5 +7,7 @@ db.report = require('./Report');
 db.epic = require('./Epic');
 db.task = require('./Task');
 db.sprint = require('./Sprint');
+db.comment = require('./Comment');
+db.taskreport = require('./TaskReport');
 
 module.exports = db;

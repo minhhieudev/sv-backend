@@ -1,11 +1,12 @@
 const express = require('express');
 const app = express();
 const $ = require('../../middlewares/safe-call')
-const UserModel = db.user;
+const modelName = 'user'
+const UserModel = db[modelName];
 const bcrypt = require("bcryptjs");
 
 app.post("/collection", $(async (req, res) => {
-  const rs = await getCollection('user', req.body)
+  const rs = await getCollection(modelName, req.body)
   res.json(rs)
 }))
 
