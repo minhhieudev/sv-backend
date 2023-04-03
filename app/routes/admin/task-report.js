@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const $ = require('../../middlewares/safe-call')
 const modelName = 'taskreport'
-const CommentModel = db[modelName];
+const TaskReportModel = db[modelName];
 
 app.post("/collection", $(async (req, res) => {
   const rs = await getCollection(modelName, req.body)
@@ -10,8 +10,14 @@ app.post("/collection", $(async (req, res) => {
 }))
 
 app.get("/", $(async (req, res) => {
-  let filter = {}
-  const docs = await CommentModel.find(filter).catch(error => {
+  if (!req.query['task']) {
+    return res.json({ success: false })
+  }
+
+  let filter = {
+    task: req.query['task']
+  }
+  const docs = await TaskReportModel.find(filter).catch(error => {
     console.error('Error: ', error);
     return []
   })
@@ -21,7 +27,7 @@ app.get("/", $(async (req, res) => {
 app.get("/:id", $(async (req, res) => {
   const id = req.params.id
   if (id) {
-    const doc = await CommentModel.findOne({ _id: id }).catch(error => {
+    const doc = await TaskReportModel.findOne({ _id: id }).catch(error => {
       console.error('Error: ', error);
       return null
     })
@@ -41,7 +47,7 @@ app.post("/", $(async (req, res) => {
     if (data._id) {
       // update
       // TODO - validate
-      const updatedDoc = await CommentModel.updateOne({ _id: data._id }, data).catch(error => {
+      const updatedDoc = await TaskReportModel.updateOne({ _id: data._id }, data).catch(error => {
         console.error('Error:', error);
         return null
       })
@@ -55,7 +61,7 @@ app.post("/", $(async (req, res) => {
       // create new
       // TODO - validate
       data.user = req.user._id
-      const createdDoc = await CommentModel.create(data).catch(error => {
+      const createdDoc = await TaskReportModel.create(data).catch(error => {
         console.error('Error:', error);
         return null
       })
@@ -74,7 +80,7 @@ app.post("/", $(async (req, res) => {
 app.delete("/:id", $(async (req, res) => {
   const id = req.params.id
   if (id) {
-    const result = await CommentModel.deleteOne({ _id: id }).catch(error => {
+    const result = await TaskReportModel.deleteOne({ _id: id }).catch(error => {
       console.error('Error: ', error);
       return null
     })

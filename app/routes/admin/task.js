@@ -17,6 +17,11 @@ app.post("/collection", $(async (req, res) => {
 
 app.get("/", $(async (req, res) => {
   let filter = {}
+  if (req.user.role != 'admin') {
+    let sprintsOfUser = await db.sprint.find({ users: req.user._id })
+    let spIDs = sprintsOfUser.map(sp => sp._id)
+    filter.sprint = { $in: spIDs }
+  }
   const docs = await TaskModel.find(filter).catch(error => {
     console.error('Error: ', error);
     return []

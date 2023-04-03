@@ -9,6 +9,7 @@ const schema = new mongoose.Schema({
   is_enabled: { type: Boolean },
   tasks: [{ type: mongoose.Types.ObjectId, ref: 'task' }],
   total_task: { type: Number },
+  users: [{ type: mongoose.Types.ObjectId, ref: 'user' }],
 })
 
 schema.set('timestamps', true);

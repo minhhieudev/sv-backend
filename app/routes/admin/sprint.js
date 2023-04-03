@@ -12,6 +12,9 @@ app.post("/collection", $(async (req, res) => {
 
 app.get("/", $(async (req, res) => {
   let filter = {}
+  if (req.user.role != 'admin') {
+    filter.users= req.user._id
+  }
   const docs = await SprintModel.find(filter).catch(error => {
     console.error('Error: ', error);
     return []
@@ -22,7 +25,7 @@ app.get("/", $(async (req, res) => {
 app.get("/:id", $(async (req, res) => {
   const id = req.params.id
   if (id) {
-    const doc = await SprintModel.findOne({ _id: id }).catch(error => {
+    const doc = await SprintModel.findOne({ _id: id }).populate('tasks', 'name').catch(error => {
       console.error('Error: ', error);
       return null
     })
@@ -62,6 +65,7 @@ app.post("/", $(async (req, res) => {
       })
 
       if (createdDoc) {
+        await db.task.updateMany({ _id: { $in: data.tasks } }, { $set: { sprint: createdDoc._id } })
         return res.json({ success: true, doc: createdDoc, status: 'success', message: 'Tạo mới thành công.' })
       } else {
         return res.json({ success: false, status: 'error', message: 'Tạo mới thất bại.' })

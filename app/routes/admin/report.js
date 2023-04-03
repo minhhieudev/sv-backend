@@ -8,7 +8,6 @@ function invalidIP (req) {
 }
 
 router.post('/checkin', $(async function (req, res) {
-  console.log('globalConfig', globalConfig);
   if (invalidIP(req)) {
     return res.json({ success: true, status: 'error', message: 'Vui lòng dùng đúng mạng của cty để check in.' })
   }

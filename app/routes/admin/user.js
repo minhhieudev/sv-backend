@@ -12,7 +12,7 @@ app.post("/collection", $(async (req, res) => {
 
 app.get("/", $(async (req, res) => {
   let filter = {}
-  const docs = await UserModel.find(filter).catch(error => {
+  const docs = await UserModel.find(filter, '-password').catch(error => {
     console.error('Error: ', error);
     return []
   })
