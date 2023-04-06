@@ -4,11 +4,13 @@ const router = express.Router();
 const $ = require('../../middlewares/safe-call')
 
 function invalidIP (req) {
-  return globalConfig.app_ip != req.ip
+  let checkInIP = req.ip.replace('::ffff:', '')
+  return globalConfig.app_ip != checkInIP
 }
 
 router.post('/checkin', $(async function (req, res) {
   console.log('checkin IP: ', req.ip);
+
   if (invalidIP(req)) {
     return res.json({ success: true, status: 'error', message: 'Vui lòng dùng đúng mạng của cty để check in.' })
   }
