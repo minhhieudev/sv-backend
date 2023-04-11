@@ -22,7 +22,7 @@ app.get("/", $(async (req, res) => {
     let spIDs = sprintsOfUser.map(sp => sp._id)
     filter.sprint = { $in: spIDs }
   }
-  const docs = await TaskModel.find(filter).populate({ path: 'assigned_users', select: 'fullname' }).catch(error => {
+  const docs = await TaskModel.find(filter).populate({ path: 'assigned_users', select: 'fullname' }).populate({ path: 'epic', select: 'name' }).catch(error => {
     console.error('Error: ', error);
     return []
   })
