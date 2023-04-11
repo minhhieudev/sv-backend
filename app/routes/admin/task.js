@@ -22,7 +22,7 @@ app.get("/", $(async (req, res) => {
     let spIDs = sprintsOfUser.map(sp => sp._id)
     filter.sprint = { $in: spIDs }
   }
-  const docs = await TaskModel.find(filter).catch(error => {
+  const docs = await TaskModel.find(filter).populate({ path: 'assigned_users', select: 'fullname' }).catch(error => {
     console.error('Error: ', error);
     return []
   })
@@ -52,12 +52,17 @@ app.post("/", $(async (req, res) => {
     if (data._id) {
       // update
       // TODO - validate
+      const currentDoc = await TaskModel.findOne({ _id: data._id })
       const updatedDoc = await TaskModel.updateOne({ _id: data._id }, data).catch(error => {
         console.error('Error:', error);
         return null
       })
 
       if (updatedDoc) {
+        if (data.sprint) {
+          await db.sprint.updateOne({ _id: currentDoc.sprint }, { $pull: { tasks: currentDoc._id } })
+          await db.sprint.updateOne({ _id: data.sprint }, { $push: { tasks: data._id } })
+        }
         return res.json({ success: true, doc: updatedDoc, status: 'success', message: 'Cập nhật thành công.' })
       } else {
         return res.json({ success: false, status: 'error', message: 'Cập nhật thất bại.' })
@@ -71,6 +76,13 @@ app.post("/", $(async (req, res) => {
       })
 
       if (createdDoc) {
+        if (createdDoc.sprint) {
+          await db.sprint.updateOne({ _id: createdDoc.sprint }, { $push: { tasks: createdDoc._id } }).catch(error => {
+            console.error('Error:', error);
+            return null
+          })
+        }
+       
         return res.json({ success: true, doc: createdDoc, status: 'success', message: 'Tạo mới thành công.' })
       } else {
         return res.json({ success: false, status: 'error', message: 'Tạo mới thất bại.' })
