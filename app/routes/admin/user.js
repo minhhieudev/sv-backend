@@ -5,19 +5,27 @@ const modelName = 'user'
 const UserModel = db[modelName];
 const bcrypt = require("bcryptjs");
 
-app.post("/collection", $(async (req, res) => {
-  const rs = await getCollection(modelName, req.body)
-  res.json(rs)
-}))
+app.post(
+  "/collection",
+  $(async (req, res) => {
+    const { role, ...otherParams } = req.body; // Lấy tham số role từ frontend
 
-app.get("/", $(async (req, res) => {
-  let filter = {}
-  const docs = await UserModel.find(filter, '-password').catch(error => {
-    console.error('Error: ', error);
-    return []
+    let filter = {};
+
+    // Kiểm tra nếu có tham số role thì thêm bộ lọc theo vai trò
+    if (role) {
+      filter.role = role;
+    }
+
+    const docs = await UserModel.find(filter, "-password").catch((error) => {
+      console.error("Error: ", error);
+      return [];
+    });
+
+    return res.json({ success: true, docs });
   })
-  return res.json({ success: true, docs })
-}))
+);
+
 
 app.get("/:id", $(async (req, res) => {
   const id = req.params.id

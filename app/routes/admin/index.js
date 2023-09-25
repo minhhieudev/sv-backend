@@ -17,11 +17,9 @@ app.use(authJwt.verifyRoleAdmin);
 app.use('/users', require('./user'));
 app.use('/helper', require('./helper'))
 app.use('/setting', require('./setting'))
-app.use('/report', require('./report'))
-app.use('/task', require('./task'))
-app.use('/sprint', require('./sprint'))
-app.use('/epic', require('./epic'))
+app.use("/question", require("./question"));
+app.use("/answer", require("./answer"));
 app.use('/comment', require('./comment'))
-app.use('/task-report', require('./task-report'))
+app.use("/training_point", require("./training_point"));
 
 module.exports = app;

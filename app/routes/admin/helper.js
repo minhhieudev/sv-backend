@@ -4,7 +4,7 @@ const app = express();
 app.get("/init", (req, res) => {
   return res.json({
     success: true,
-    taskStatus: db.task.STATUS_LABEL
+    //taskStatus: db.task.STATUS_LABEL
   })
 });
 

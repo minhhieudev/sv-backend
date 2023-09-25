@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const multer = require('multer')
-const { slugify } = require('../../helpers/methods')
 const FileModel = db.file;
 const fs = require('fs')
 const path = require('path')
